@@ -1,0 +1,9 @@
+CANVAS = HTML Canvas element
+CTX = canvas.getContext("2d")
+
+procedure drawRect(name)
+    CTX.fillRect(0,0,50,50)
+endprocedure
+
+
+
