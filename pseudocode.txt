@@ -1,9 +1,52 @@
 CANVAS = HTML Canvas element
 CTX = canvas.getContext("2d")
+angle = 0
 
-procedure drawRect(name)
-    CTX.fillRect(0,0,50,50)
+procedure drawRect()
+    draw a
+
+
+class Vector 
+    public X
+    public Y
+    public procedure new(v_x,v_y)
+        X=v_x
+        Y=v_y
+    endprocedure
+    procedure addVector(vector)
+        X += vector.X
+        Y += vector.Y
+    endprocedure
+
+    procedure setZero()
+        X = 0
+        Y = 0
+    endprocedure
+endclass
+
+class Object
+    [CREATE PRIVATE ATTRIBUTES]
+    public procedure new(color,mass,size,pos,vel,acc)
+        [ASSIGN ALL ATTRIBUTES TO PARAMETERS OF CONSTRUCTOR BY USING OBJECTS FOR THE 2D VECTORS] 
+    endprocedure
+
+    public procedure applyAccelerations()
+        pos.X += vel.X/2
+        pos.Y += vel.Y/2
+        
+        vel.addVector(acc)
+
+        pos.X += vel.X/2
+        pos.Y += vel.Y/2
+
+        acc.setZero()
+    endprocedure
+endclass
+
+objects = []
+objects.push(new Object())
+PROCEDUCE renderObjects()
+    for i=0 to objects.length
+        [RENDER OBJECT AS CIRCLE AT COORDINATES]
+    next i
 endprocedure
-
-
-
