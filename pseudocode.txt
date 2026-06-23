@@ -10,17 +10,17 @@ class Vector
     public X
     public Y
     public procedure new(v_x,v_y)
-        X=v_x
-        Y=v_y
+        this.X=v_x
+        this.Y=v_y
     endprocedure
     procedure addVector(vector)
-        X += vector.X
-        Y += vector.Y
+        this.X += vector.X
+        this.Y += vector.Y
     endprocedure
 
     procedure setZero()
-        X = 0
-        Y = 0
+        this.X = 0
+        this.Y = 0
     endprocedure
 endclass
 
@@ -45,8 +45,28 @@ endclass
 
 objects = []
 objects.push(new Object())
-PROCEDUCE renderObjects()
+procedure renderObjects()
     for i=0 to objects.length
         [RENDER OBJECT AS CIRCLE AT COORDINATES]
     next i
 endprocedure
+
+class Player inherits object 
+    [CREATE PRIVATE ATTRIBUTES]
+    public angle
+    public angularVelocity
+    public thrust
+    public acceleration
+    public procedure new(color,mass,size,pos,vel,acc, acceleration)
+        [ASSIGN ALL ATTRIBUTES TO PARAMETERS OF CONSTRUCTOR BY USING OBJECTS FOR THE 2D VECTORS] 
+        this.angle = 0
+        this.angularVelocity = 0
+        this.thrust = 0
+        this.acceleration = acceleration
+    endprocedure
+
+    public procedure applyRocketControls 
+        [IF ANY OF THE CONTROL KEYS ARE PRESSED, APPLY THE CORRECT RESULT]
+    endprocedure
+endclass
+
