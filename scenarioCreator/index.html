@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <button onclick="createCard()">New Card</button>
+        <button onclick="copyConfig()">Copy Config</button>
+        <input id="configInput">
+        <button onclick="loadConfig()">Load Config</button>
+        <input type="checkbox" id="player" checked> Player
+        <input type="checkbox" id="gravity" checked> Gravity
+        <input type="checkbox" id="collisions" checked> Collisions
+        <br>
+        <br>
+
+
+        <div class="configs" id="configs">
+
+            <div class="card" hidden>
+                <p>Config Card</p>
+                <label>
+                    Size:
+                    <input name="size" /> * 10^<input name="sizepow" />
+                </label>
+                <br>
+                <br>
+                <label>
+                    Mass:
+                    <input name="mass" /> * 10^<input name="masspow" />
+                </label>
+                <br>
+                <br>
+                <label>
+                    Position:
+                    <br>
+                    X:<input name="xpos" /> * 10^<input name="xpospow" />
+                    <br>
+                    Y:<input name="ypos" /> * 10^<input name="ypospow" />
+                </label>
+                <br>
+                <br>
+                <label>
+                    Velocity:
+                    <br>
+                    X:<input name="xvel" /> * 10^<input name="xvelpow" />
+                    <br>
+                    Y:<input name="yvel" /> * 10^<input name="yvelpow" />
+                </label>
+                <br>
+                <br>
+                <label>
+                    Colour:
+                    <input name="colour" />
+                </label>
+
+            </div>
+
+        </div>
+        <script src='script.js'></script>
+    </body>
+</html>
