@@ -394,7 +394,10 @@ function init() {
   draw();
 }
 
-let player = new Player("red", 0, 0, new Vector(0, -300), new Vector(0, 0), new Vector(0, 0), 1)
+let player = new Player("red", 1, 100, new Vector(1000, 0), new Vector(0, 0), new Vector(0,20))
+
+objects.push(new Object("blue", 100, 100, new Vector(-50000 + Math.random() * 100000, 50000 - Math.random() * 100000), new Vector(0, 0), new Vector(-10+(Math.random()*20), -10+(Math.random()*20))))
+objects.push(new Object("blue", 100, 10, new Vector(-50000 + Math.random() * 100000, 50000 - Math.random() * 100000), new Vector(0, 0), new Vector(-10+(Math.random()*20), -10+(Math.random()*20))))
 
 
 for (let i = 0; i < 50; i++) {
