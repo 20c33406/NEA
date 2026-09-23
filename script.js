@@ -468,7 +468,7 @@ function draw(time) {
   ctx.restore()
 
   renderSymbols();
-
+  console.log(objects)
   // Requests the next frame to be drawn,
   // creating a loop repeating 60 times per second
   requestAnimationFrame(draw);
@@ -521,15 +521,16 @@ function loadConfig() {
   const JSONconfig = configInput.value
   const config = JSON.parse(JSONconfig)
 
-  objects = []
-  if (usePlayer) {
-    player = new Player("red", 1, 1, new Vector(6.97 * 10 ** 8, 0), new Vector(0, 10 ** 4), new Vector(0, 0))
-    objects.push(player)
-  }
-
+  objects = [];
   usePlayer = config[0][0]
   doGravity = config[0][1]
   doCollisions = config[0][2]
+  if (usePlayer) {
+    player = new Player("red", 1, 1, new Vector(0, 0), new Vector(0, 10 ** 4), new Vector(0, 0))
+    objects.push(player)
+  }
+
+
 
   for (let i = 1; i < config.length; i++){
     let card = config[i]
@@ -570,6 +571,6 @@ function init() {
   draw();
 }
 
-
+player = new Player("red", 1, 1, new Vector(0, 0), new Vector(0, 0), new Vector(0, 0))
 
 draw();
