@@ -21,8 +21,8 @@ const minimumRadius = 1.5;
 const scaleFactor = 1/1000;
 
 // The gravitational constant of the simulation
-const GCONST = 6.67*(10**-11);
-
+// const GCONST = 6.67*(10**-11);
+const GCONST = 10;
 // The coefficient of restitution between all of the objects in the game
 const restitution = 1;
 
@@ -30,7 +30,7 @@ const restitution = 1;
 let gameSpeed = 1;
 
 // The current scale of the camera view
-let scale = 1;
+let scale = 0.3;
 
 let doCollisions = true
 let doGravity = true
@@ -572,5 +572,18 @@ function init() {
 }
 
 player = new Player("red", 1, 1, new Vector(0, 0), new Vector(0, 0), new Vector(0, 0))
-
+/*
+for (let i = 0; i < 1000; i++){
+  randX = Math.random() * 10000
+  randY = Math.random() * 10000
+  objects.push(new Object(
+    "white",
+    100,
+    100,
+    new Vector(randX, randY),
+    new Vector(0, 0),
+    new Vector(0, 0)
+  ))
+}
+*/
 draw();

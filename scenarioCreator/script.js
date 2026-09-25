@@ -12,9 +12,11 @@ function copyConfig() {
   const cards = configs.getElementsByClassName('card')
 
   let config = [[usePlayer.checked, doGravity.checked, doCollisions.checked]]
+
   for (let i = 0; i < cards.length; i++) {
     let cardAttributes = []
     let attributes = cards[i].getElementsByTagName('input')
+
     for (let j = 0; j < attributes.length; j++){
 
       cardAttributes.push(attributes[j].value)
