@@ -21,8 +21,8 @@ const minimumRadius = 1.5;
 const scaleFactor = 1/1000;
 
 // The gravitational constant of the simulation
-// const GCONST = 6.67*(10**-11);
-const GCONST = 10;
+const GCONST = 6.67*(10**-11);
+
 // The coefficient of restitution between all of the objects in the game
 const restitution = 1;
 
@@ -50,6 +50,7 @@ let keys = {
   d: false
 }
 
+// A class for vectors, allowing me to do vector calculations easier
 class Vector {
   constructor(x, y) {
     this.X = x;
@@ -63,18 +64,21 @@ class Vector {
     this.X = 0;
     this.Y = 0;
   }
+  // Returns the vector rotated by theta degrees
   rotate(theta) {
     return new Vector(
       this.X * Math.cos(theta) - this.Y * Math.sin(theta),
       this.X * Math.sin(theta) + this.Y * Math.cos(theta)
     )
   }
+  // Returns the vector as a unit vector (magnitude 1)
   unitVector() {
     return new Vector(
       this.X / Math.hypot(this.Y, this.X),
       this.Y / Math.hypot(this.Y, this.X)
     )
   }
+  // Multiplies two vectors
   mult(mult) {
     return new Vector(
       this.X * mult,
@@ -84,7 +88,7 @@ class Vector {
 }
 
 
-
+// A class for the objects
 class Object {
   // Constructor for all of the attributes
   // that will be required to render the objects
@@ -97,13 +101,15 @@ class Object {
     this.acc = acc;
 
   }
-
+  // Calculates and applies the gravitational attraction between
+  // the parent object and the parameter object
   calculateGravity(object) {
 
 
     let dist = Math.hypot(this.pos.X - object.pos.X, this.pos.Y - object.pos.Y);
     let angle = Math.atan2(object.pos.Y - this.pos.Y, object.pos.X - this.pos.X);
 
+    // Stops if the objects are intersecting
     if (dist < this.radius + object.radius) { return }
 
     let thisMagnitude = (GCONST * object.mass) / (dist ** 2);
@@ -118,12 +124,12 @@ class Object {
     object.acc.X += objAcceleration.X
     object.acc.Y += objAcceleration.Y
   }
-
+  // Calculates the consequences of an intersection between two objects
   calculateCollision(object) {
     if(this.mass==0 || object.mass==0){return}
     let dist = Math.hypot(this.pos.X - object.pos.X, this.pos.Y - object.pos.Y);
     if (dist < this.radius + object.radius) {
-
+      console.log('COLLISION')
       let angle = -Math.atan2(object.pos.Y - this.pos.Y, object.pos.X - this.pos.X);
 
       // First, rotate the system by the angle
@@ -157,6 +163,8 @@ class Object {
       object.vel.X += objAcceleration.X;
       this.vel.Y += thisAcceleration.Y;
       object.vel.Y += objAcceleration.Y;
+
+
     }
 
   }
@@ -217,7 +225,7 @@ class Object {
     ctx.restore();
   }
 }
-
+// The class for the player which inherits from object
 class Player extends Object {
   constructor(color, mass, radius, pos, vel, acc){
     super(color, mass, radius, pos, vel, acc)
@@ -228,12 +236,12 @@ class Player extends Object {
     this.thrust = 0;
 
     // Maximum acceleration of the craft
-    this.acceleration = 100;
+    this.acceleration = 1;
 
     //
     this.sas = 'na'
   }
-
+  // Renders the player object
   renderObject () {
     ctx.save();
     ctx.translate(centreX, centreY);
@@ -288,7 +296,7 @@ class Player extends Object {
 
     ctx.restore();
   }
-
+  // Renders the symbol of the ship (a green triangle)
   renderSymbol() {
     ctx.save();
 
@@ -310,7 +318,7 @@ class Player extends Object {
 
     ctx.restore();
   }
-
+  // Gets the sphere of influence of the player
   getSOI() {
     let soiEffect = -1;
     let soi = 0;
@@ -339,7 +347,7 @@ class Player extends Object {
     if(keys.d){
       this.angularVelocity -= 0.0001
     }
-
+    // Applies the directions for different SAS controls relative to the nearest sphere of influence
     let soi = this.getSOI()
     let newAngle = this.angle
     switch (this.sas) {
@@ -390,7 +398,8 @@ class Player extends Object {
   }
 
 }
-
+// Applies gravity and collisions to all objects
+// if those features are enabled in the config
 function applyPhysics() {
   for (let i = 0; i < objects.length; i++){
     for (let j = i + 1; j < objects.length; j++){
@@ -405,38 +414,42 @@ function applyPhysics() {
 }
 
 
-
+// Updates the positions of the objects using leapfrog integration
 function updateObjects() {
-  for(let i = 0; i < objects.length; i++) {
+  for (let i = 0; i < objects.length; i++) {
+    // Adds half of the velocity for the next frame
     objects[i].vel.X += objects[i].acc.X/2;
     objects[i].vel.Y += objects[i].acc.Y / 2;
-
+    // Updates the positions
     objects[i].pos.addVector(objects[i].vel);
   }
 
-  for(let i = 0; i < objects.length; i++) {
+  for (let i = 0; i < objects.length; i++) {
+    // Sets acc to zero
     objects[i].acc.setZero()
   }
-
+  // Updates the physics
   applyPhysics();
+
+  // If the player feature is active the rocket controls are applied
   if (usePlayer) {
     player.applyRocketControls();
   }
 
-
+  // Adds the rest of the velocity for the next frame
   for(let i = 0; i < objects.length; i++) {
     objects[i].vel.X += objects[i].acc.X/2;
     objects[i].vel.Y += objects[i].acc.Y / 2;
   }
 }
-
+// Renders all of the objects in the game scene
 function renderObjects() {
   for(let i = 0; i < objects.length; i++) {
     objects[i].renderObject()
 
   }
 }
-
+// Renders symbols if the object is too small in the game scene
 function renderSymbols(){
   for (let i = 0; i < objects.length; i++){
     if (objects[i].radius * scale < minimumRadius) {
@@ -447,6 +460,7 @@ function renderSymbols(){
 
 
 function draw(time) {
+  console.log(objects)
   // Clears the canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -466,9 +480,9 @@ function draw(time) {
   renderObjects();
 
   ctx.restore()
-
+  // Renders the symbols
   renderSymbols();
-  console.log(objects)
+
   // Requests the next frame to be drawn,
   // creating a loop repeating 60 times per second
   requestAnimationFrame(draw);
@@ -516,7 +530,7 @@ document.addEventListener("keyup", function (e) {
   }
 })
 
-
+// Loads the config from text to the game
 function loadConfig() {
   const JSONconfig = configInput.value
   const config = JSON.parse(JSONconfig)
@@ -526,12 +540,12 @@ function loadConfig() {
   doGravity = config[0][1]
   doCollisions = config[0][2]
   if (usePlayer) {
-    player = new Player("red", 1, 1, new Vector(0, 0), new Vector(0, 10 ** 4), new Vector(0, 0))
+    player = new Player("red", 1, 1, new Vector(0, 0), new Vector(0, 0), new Vector(0, 0))
     objects.push(player)
   }
 
 
-
+  // For every element in the object except the first it creates a new object with those properties
   for (let i = 1; i < config.length; i++){
     let card = config[i]
     objects.push(new Object(
@@ -544,23 +558,26 @@ function loadConfig() {
     ))
   }
 }
-
+// Scales the game scene based on movements of the scroll wheel
 function zoom(event) {
   scale = Math.min(1,scale + (scaleFactor * event.deltaY * scale))
 }
 
+// Increases game speed when the button is pressed
 function increaseTime() {
   gameSpeed *= 2
   gameSpeedValue.innerText = gameSpeed
 
 }
 
+// decreases game speed when the button is pressed. Ensures that the value cannot go below one.
 function decreaseTime() {
   if (gameSpeed == 1) { return }
   gameSpeed *= 0.5
   gameSpeedValue.innerText = gameSpeed
 }
 
+// Checks what box is checked for the SAS controls
 function checkControls() {
   player.sas = document.querySelector('input[name="rocketControls"]:checked').value;
 }
@@ -571,19 +588,4 @@ function init() {
   draw();
 }
 
-player = new Player("red", 1, 1, new Vector(0, 0), new Vector(0, 0), new Vector(0, 0))
-/*
-for (let i = 0; i < 1000; i++){
-  randX = Math.random() * 10000
-  randY = Math.random() * 10000
-  objects.push(new Object(
-    "white",
-    100,
-    100,
-    new Vector(randX, randY),
-    new Vector(0, 0),
-    new Vector(0, 0)
-  ))
-}
-*/
 draw();
